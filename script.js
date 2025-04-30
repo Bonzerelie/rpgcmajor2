@@ -39,7 +39,7 @@ function getNoteName(filename) {
 }
 
 function playNote(noteFile) {
-  audio.src = audio/${noteFile}.mp3;
+  audio.src = `audio/${noteFile}.mp3`;
   audio.play();
 }
 
@@ -71,13 +71,13 @@ function handleAnswer(e) {
   if (selected === correctName) {
     correct++;
     e.target.classList.add('correct');
-    promptText.textContent = Correct! ✅ The note was ${correctName};
+    promptText.textContent = `Correct! ✅ The note was ${correctName}`;
   } else {
     incorrect++;
     e.target.classList.add('incorrect');
     const correctBtn = [...noteButtons].find(btn => btn.getAttribute('data-note') === correctName);
     if (correctBtn) correctBtn.classList.add('correct');
-    promptText.textContent = Incorrect! ❌ The note played was actually ${correctName};
+    promptText.textContent = `Incorrect! ❌ The note played was actually ${correctName}`;
   }
 
   updateScore();
