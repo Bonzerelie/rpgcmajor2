@@ -1,7 +1,9 @@
 const startScreen = document.getElementById('start-screen');
 const gameScreen = document.getElementById('game-screen');
-const startButtons = document.querySelectorAll('[data-mode]');
-const modeTitle = document.getElementById('mode-title');
+const startModeButtons = document.querySelectorAll('#mode-select .green-button');
+const switchModeButtons = document.querySelectorAll('#mode-switcher .green-button');
+const modeLabel = document.getElementById('mode-label');
+
 const playRefBtn = document.getElementById('play-reference');
 const replayNoteBtn = document.getElementById('replay-note');
 const nextBtn = document.getElementById('next-button');
@@ -14,14 +16,7 @@ const incorrectCount = document.getElementById('incorrect-count');
 const totalCount = document.getElementById('total-count');
 const accuracyDisplay = document.getElementById('accuracy');
 
-let currentNote = '';
-let audio = new Audio();
-let correct = 0;
-let incorrect = 0;
-let isAnswered = false;
-let currentNoteList = [];
-
-const fullNoteMap = {
+const noteMap = {
   'C': ['c3', 'c4', 'c5', 'c6'],
   'D': ['d3', 'd4', 'd5'],
   'E': ['e3', 'e4', 'e5'],
@@ -31,26 +26,26 @@ const fullNoteMap = {
   'B': ['b3', 'b4', 'b5']
 };
 
-const oneOctaveMap = {
-  'C': ['c4'],
-  'D': ['d4'],
-  'E': ['e4'],
-  'F': ['f4'],
-  'G': ['g4'],
-  'A': ['a4'],
-  'B': ['b4']
-};
+const oneOctaveFiles = ['c4', 'd4', 'e4', 'f4', 'g4', 'a4', 'b4'];
+const threeOctaveFiles = Object.values(noteMap).flat();
+
+let currentMode = 'three'; // default
+let currentNote = '';
+let audio = new Audio();
+let correct = 0;
+let incorrect = 0;
+let isAnswered = false;
+
+function getCurrentNotePool() {
+  return currentMode === 'one' ? oneOctaveFiles : threeOctaveFiles;
+}
 
 function getNoteName(filename) {
-  const activeMap = currentNoteList === allOneOctaveNotes ? oneOctaveMap : fullNoteMap;
-  for (const [name, files] of Object.entries(activeMap)) {
+  for (const [name, files] of Object.entries(noteMap)) {
     if (files.includes(filename)) return name;
   }
   return '';
 }
-
-const allThreeOctaveNotes = Object.values(fullNoteMap).flat();
-const allOneOctaveNotes = Object.values(oneOctaveMap).flat();
 
 function playNote(noteFile) {
   audio.src = `audio/${noteFile}.mp3`;
@@ -58,11 +53,15 @@ function playNote(noteFile) {
 }
 
 function startGame(mode) {
-  currentNoteList = mode === 'one-octave' ? allOneOctaveNotes : allThreeOctaveNotes;
-  modeTitle.textContent = mode === 'one-octave' ? 'One Octave Mode (C4–B4)' : 'Three Octave Mode (C3–C6)';
+  currentMode = mode;
   startScreen.classList.add('hidden');
   gameScreen.classList.remove('hidden');
+  updateModeLabel();
   loadNewNote();
+}
+
+function updateModeLabel() {
+  modeLabel.textContent = `Mode: ${currentMode === 'one' ? 'One Octave (C4–B4)' : 'Three Octaves (C3–C6)'}`;
 }
 
 function loadNewNote() {
@@ -71,7 +70,8 @@ function loadNewNote() {
     btn.disabled = false;
     btn.classList.remove('correct', 'incorrect');
   });
-  currentNote = currentNoteList[Math.floor(Math.random() * currentNoteList.length)];
+  const pool = getCurrentNotePool();
+  currentNote = pool[Math.floor(Math.random() * pool.length)];
   playNote(currentNote);
   promptText.textContent = 'Which note was played?';
   nextBtn.disabled = true;
@@ -93,7 +93,7 @@ function handleAnswer(e) {
     e.target.classList.add('incorrect');
     const correctBtn = [...noteButtons].find(btn => btn.getAttribute('data-note') === correctName);
     if (correctBtn) correctBtn.classList.add('correct');
-    promptText.textContent = `Incorrect! ❌ The note played was actually ${correctName}`;
+    promptText.textContent = `Incorrect! ❌ The note was actually ${correctName}`;
   }
 
   updateScore();
@@ -115,8 +115,20 @@ function resetScore() {
   updateScore();
 }
 
-startButtons.forEach(btn => {
-  btn.addEventListener('click', () => startGame(btn.dataset.mode));
+startModeButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const mode = btn.getAttribute('data-mode');
+    startGame(mode);
+  });
+});
+
+switchModeButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const mode = btn.getAttribute('data-mode');
+    currentMode = mode;
+    updateModeLabel();
+    loadNewNote();
+  });
 });
 
 playRefBtn.addEventListener('click', () => playNote('c4'));
