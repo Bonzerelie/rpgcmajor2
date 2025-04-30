@@ -74,13 +74,13 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .blue-button {
   flex: 1 1 auto;
-  max-width: 60px;
-  min-width: 40px;
+  max-width: 50px;
+  min-width: 35px;
   padding: 10px;
   box-sizing: border-box;
 }
