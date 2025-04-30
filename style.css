@@ -92,3 +92,9 @@ body {
 .scoreboard {
   text-align: center;
 }
+
+#game-screen p {
+  font-size: 14px;
+  color: #333;
+  margin-top: 5px;
+}
