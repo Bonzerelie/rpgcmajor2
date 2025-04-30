@@ -70,16 +70,18 @@ body {
 }
 
 #note-buttons-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
-  justify-items: center;
 }
 
 .blue-button {
-  width: 100%;
-  max-width: 120px;
+  flex: 1 1 auto;
+  max-width: 60px;
+  min-width: 40px;
+  padding: 10px;
   box-sizing: border-box;
 }
 
