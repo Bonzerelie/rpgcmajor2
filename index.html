@@ -12,17 +12,21 @@
       <div class="start-content">
         <h1>The Relative Pitch Game! 🎹🎶</h1>
         <p>Can you correctly identify which note is played?<br>Use the reference pitch to help!</p>
-        <div class="mode-select">
-          <p>Select range:</p>
-          <button class="green-button" data-mode="one-octave">One Octave (C4–B4)</button>
-          <button class="green-button" data-mode="three-octave">Three Octaves (C3–C6)</button>
+        <div id="mode-select">
+          <button class="green-button" data-mode="one">One Octave (C4–B4)</button>
+          <button class="green-button" data-mode="three">Three Octaves (C3–C6)</button>
         </div>
       </div>
     </div>
 
     <div id="game-screen" class="hidden">
       <h1>The Relative Pitch Game! 🎹🎶</h1>
-      <h2 id="mode-title"></h2>
+      <h2 id="mode-label">Mode: Three Octaves</h2>
+
+      <div id="mode-switcher">
+        <button class="green-button" data-mode="one">Switch to One Octave</button>
+        <button class="green-button" data-mode="three">Switch to Three Octaves</button>
+      </div>
 
       <div class="controls">
         <button id="play-reference" class="green-button">Play Reference (C4)</button>
